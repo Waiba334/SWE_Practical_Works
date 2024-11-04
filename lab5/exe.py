@@ -1,99 +1,90 @@
-# postfix expressions.
-def evaluate_postfix(expression):
-    stack = []
-    
-    for token in expression.split():
-        if token.isdigit():  
-            stack.append(int(token))
-        else: 
-            operand2 = stack.pop()
-            operand1 = stack.pop()
-            
-            if token == '+':
-                stack.append(operand1 + operand2)
-            elif token == '-':
-                stack.append(operand1 - operand2)
-            elif token == '*':
-                stack.append(operand1 * operand2)
-            elif token == '/':
-                stack.append(int(operand1 / operand2))  
-    
-    return stack.pop()
+#Implement a method to find the middle element of the linked list
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
 
-expression = "3 4 + 2 * 7 /"
-print(f"Result of '{expression}':", evaluate_postfix(expression))  # Outputs: 2
-
-# Implementing a Queue Using Two Stacks
-class QueueUsingStacks:
+class LinkedList:
     def __init__(self):
-        self.stack1 = []
-        self.stack2 = []
+        self.head = None
 
-    def enqueue(self, item):
-        self.stack1.append(item)
+    def append(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+            return
+        last = self.head
+        while last.next:
+            last = last.next
+        last.next = new_node
 
-    def dequeue(self):
-        if not self.stack2:
-            while self.stack1:
-                self.stack2.append(self.stack1.pop())
-        if self.stack2:
-            return self.stack2.pop()
-        else:
-            raise IndexError("Queue is empty")
+    def find_middle(self):
+        slow = self.head
+        fast = self.head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        return slow.data if slow else None
 
-queue = QueueUsingStacks()
-queue.enqueue(1)
-queue.enqueue(2)
-queue.enqueue(3)
-print(queue.dequeue()) 
-print(queue.dequeue()) 
+#Create a method to detect if the linked list has a cycle
+    def has_cycle(self):
+        slow = self.head
+        fast = self.head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow == fast:
+                return True
+        return False
 
-#Basic Task Scheduler Using a Queue
-from collections import deque
+#Implement a method to remove duplicates from an unsorted linked list
+    def remove_duplicates(self):
+        current = self.head
+        prev = None
+        seen = set()
+        while current:
+            if current.data in seen:
+                prev.next = current.next  # Remove the duplicate
+            else:
+                seen.add(current.data)
+                prev = current
+            current = current.next
 
-class TaskScheduler:
-    def __init__(self):
-        self.queue = deque()
-    
-    def add_task(self, task):
-        self.queue.append(task)
-    
-    def process_tasks(self):
-        while self.queue:
-            task = self.queue.popleft()
-            print("Processing:", task)
+#Add a method to merge two sorted linked lists into a single sorted linked list.
+    def merge_sorted(self, other_list):
+        dummy = Node(0)
+        tail = dummy
+        a = self.head
+        b = other_list.head
+        
+        while a and b:
+            if a.data <= b.data:
+                tail.next = a
+                a = a.next
+            else:
+                tail.next = b
+                b = b.next
+            tail = tail.next
 
-scheduler = TaskScheduler()
-scheduler.add_task("task1")
-scheduler.add_task("task2")
-scheduler.add_task("task3")
-scheduler.process_tasks()
+        tail.next = a if a else b
+        self.head = dummy.next
 
-#Infix to Postfix Conversion Using a Stack
-def infix_to_postfix(expression):
-    precedence = {'+': 1, '-': 1, '*': 2, '/': 2}
-    stack = []
-    output = []
-    
-    for token in expression.split():
-        if token.isalnum():  
-            output.append(token)
-        elif token == '(':
-            stack.append(token)
-        elif token == ')':
-            while stack and stack[-1] != '(':
-                output.append(stack.pop())
-            stack.pop()  
-        else:  
-            while (stack and stack[-1] != '(' and 
-                   precedence.get(token, 0) <= precedence.get(stack[-1], 0)):
-                output.append(stack.pop())
-            stack.append(token)
-    
-    while stack:
-        output.append(stack.pop())
-    
-    return ' '.join(output)
+ll1 = LinkedList()
+ll2 = LinkedList()
 
-expression = "3 + 4 * 2 / ( 1 - 5 )"
-print("Postfix:", infix_to_postfix(expression))
+for value in [1, 3, 5, 7]:
+    ll1.append(value)
+
+for value in [2, 4, 6, 8]:
+    ll2.append(value)
+
+print("Middle of ll1:", ll1.find_middle())
+print("Does ll1 have a cycle?", ll1.has_cycle())
+
+ll1.remove_duplicates()
+ll1.merge_sorted(ll2)
+
+current = ll1.head
+while current:
+    print(current.data, end=" -> ")
+    current = current.next

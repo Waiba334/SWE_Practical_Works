@@ -1,87 +1,324 @@
-#1 Implement an In-Place Version of Quick Sort
-def in_place_quick_sort(arr, low=0, high=None):
-    if high is None:
-        high = len(arr) - 1
+#1 Implement the Graph Class
+from collections import defaultdict
 
-    if low < high:
-        p = partition(arr, low, high)
-        in_place_quick_sort(arr, low, p - 1)
-        in_place_quick_sort(arr, p + 1, high)
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)  
 
-def partition(arr, low, high):
-    pivot = arr[high]  
-    i = low - 1
-    for j in range(low, high):
-        if arr[j] <= pivot:
-            i += 1
-            arr[i], arr[j] = arr[j], arr[i]
-    arr[i + 1], arr[high] = arr[high], arr[i + 1]
-    return i + 1
-
-test_arr = [64, 34, 25, 12, 22, 11, 90]
-in_place_quick_sort(test_arr)
-print("In-Place Quick Sort Result:", test_arr)
-
-#2 Modify Bubble Sort to Stop Early
-def optimized_bubble_sort(arr):
-    n = len(arr)
-    for i in range(n):
-        swapped = False
-        for j in range(0, n - i - 1):
-            if arr[j] > arr[j + 1]:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]
-                swapped = True
-        if not swapped:
-            break
-    return arr
-
-test_arr = [64, 34, 25, 12, 22, 11, 90]
-sorted_arr = optimized_bubble_sort(test_arr.copy())
-print("Optimized Bubble Sort Result:", sorted_arr)
-
-#3 Implement a Hybrid Sorting Algorithm
-def insertion_sort(arr, left, right):
-    for i in range(left + 1, right + 1):
-        key = arr[i]
-        j = i - 1
-        while j >= left and arr[j] > key:
-            arr[j + 1] = arr[j]
-            j -= 1
-        arr[j + 1] = key
-
-def hybrid_quick_sort(arr, low=0, high=None):
-    if high is None:
-        high = len(arr) - 1
-    if high - low < 10:  
-        insertion_sort(arr, low, high)
-    else:
-        if low < high:
-            p = partition(arr, low, high)
-            hybrid_quick_sort(arr, low, p - 1)
-            hybrid_quick_sort(arr, p + 1, high)
-
-test_arr = [64, 34, 25, 12, 22, 11, 90]
-hybrid_quick_sort(test_arr)
-print("Hybrid Quick Sort Result:", test_arr)
-
-#4 Create a Visualization of Sorting Algorithms
-import matplotlib.pyplot as plt
-import numpy as np
-
-def visualize_bubble_sort(arr):
-    n = len(arr)
-    plt.ion()
-    fig, ax = plt.subplots()
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
     
-    for i in range(n):
-        for j in range(0, n - i - 1):
-            if arr[j] > arr[j + 1]:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]
-            ax.clear()
-            ax.bar(range(len(arr)), arr, color='grey')
-            plt.pause(0.05)
-    plt.ioff()
-    plt.show()
+    def add_edge(self, vertex1, vertex2, weight=1):
+        self.add_vertex(vertex1)
+        self.add_vertex(vertex2)
+        self.graph[vertex1].append((vertex2, weight))
+        self.graph[vertex2].append((vertex1, weight)) 
+    
+    def print_graph(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {', '.join(f'({neighbor}, {weight})' for neighbor, weight in edges)}")
 
-test_arr = [64, 34, 25, 12, 22, 11, 90]
-visualize_bubble_sort(test_arr.copy())
+g = Graph()
+g.add_edge(0, 1, 1)
+g.add_edge(0, 2, 4)
+g.add_edge(1, 2, 2)
+g.add_edge(1, 3, 5)
+g.add_edge(2, 3, 1)
+g.print_graph()
+
+#2 Implement BFS to Find the Shortest Path
+from collections import deque
+
+class Graph:
+    
+    def __init__(self):
+        self.graph = defaultdict(list)  
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+    
+    def add_edge(self, vertex1, vertex2, weight=1):
+        self.add_vertex(vertex1)
+        self.add_vertex(vertex2)
+        self.graph[vertex1].append((vertex2, weight))
+        self.graph[vertex2].append((vertex1, weight)) 
+    
+    def print_graph(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {', '.join(f'({neighbor}, {weight})' for neighbor, weight in edges)}")
+
+    def bfs_shortest_path(self, start, goal):
+        visited = set()
+        queue = deque([(start, [start])]) 
+        while queue:
+            vertex, path = queue.popleft()
+            if vertex == goal:
+                return path
+            if vertex not in visited:
+                visited.add(vertex)
+                for neighbor, _ in self.graph[vertex]:  
+                    queue.append((neighbor, path + [neighbor]))
+        return None  
+
+g = Graph()
+g.add_edge(0, 1, 1)
+g.add_edge(0, 2, 4)
+g.add_edge(1, 2, 2)
+g.add_edge(1, 3, 5)
+g.add_edge(2, 3, 1)
+g.print_graph()
+print("\nShortest path from 0 to 4:", g.bfs_shortest_path(0, 4))
+
+#3Add Cycle Detection
+class Graph:
+    
+    def __init__(self):
+        self.graph = defaultdict(list)  
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+    
+    def add_edge(self, vertex1, vertex2, weight=1):
+        self.add_vertex(vertex1)
+        self.add_vertex(vertex2)
+        self.graph[vertex1].append((vertex2, weight))
+        self.graph[vertex2].append((vertex1, weight)) 
+    
+    def print_graph(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {', '.join(f'({neighbor}, {weight})' for neighbor, weight in edges)}")
+
+    def bfs_shortest_path(self, start, goal):
+        visited = set()
+        queue = deque([(start, [start])]) 
+        while queue:
+            vertex, path = queue.popleft()
+            if vertex == goal:
+                return path
+            if vertex not in visited:
+                visited.add(vertex)
+                for neighbor, _ in self.graph[vertex]:  
+                    queue.append((neighbor, path + [neighbor]))
+        return None  
+    
+    def has_cycle(self):
+        visited = set()
+
+        def dfs(vertex, parent):
+            visited.add(vertex)
+            for neighbor, _ in self.graph[vertex]:
+                if neighbor not in visited:
+                    if dfs(neighbor, vertex):
+                        return True
+                elif parent != neighbor:  # Found a back edge
+                    return True
+            return False
+
+        for vertex in self.graph:
+            if vertex not in visited:
+                if dfs(vertex, None):
+                    return True
+        return False
+
+g = Graph()
+g.add_edge(0, 1, 1)
+g.add_edge(0, 2, 4)
+g.add_edge(1, 2, 2)
+g.add_edge(1, 3, 5)
+g.add_edge(2, 3, 1)
+g.print_graph()
+print("\nShortest path from 0 to 4:", g.bfs_shortest_path(0, 4))
+
+#4 Implement Dijkstra's Algorithm
+import heapq
+
+class Graph:
+    
+    def __init__(self):
+        self.graph = defaultdict(list)  
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+    
+    def add_edge(self, vertex1, vertex2, weight=1):
+        self.add_vertex(vertex1)
+        self.add_vertex(vertex2)
+        self.graph[vertex1].append((vertex2, weight))
+        self.graph[vertex2].append((vertex1, weight)) 
+    
+    def print_graph(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {', '.join(f'({neighbor}, {weight})' for neighbor, weight in edges)}")
+
+    def bfs_shortest_path(self, start, goal):
+        visited = set()
+        queue = deque([(start, [start])]) 
+        while queue:
+            vertex, path = queue.popleft()
+            if vertex == goal:
+                return path
+            if vertex not in visited:
+                visited.add(vertex)
+                for neighbor, _ in self.graph[vertex]:  
+                    queue.append((neighbor, path + [neighbor]))
+        return None  
+    
+    def has_cycle(self):
+        visited = set()
+
+        def dfs(vertex, parent):
+            visited.add(vertex)
+            for neighbor, _ in self.graph[vertex]:
+                if neighbor not in visited:
+                    if dfs(neighbor, vertex):
+                        return True
+                elif parent != neighbor:  # Found a back edge
+                    return True
+            return False
+
+        for vertex in self.graph:
+            if vertex not in visited:
+                if dfs(vertex, None):
+                    return True
+        return False
+    
+    def dijkstra(self, start):
+        distances = {vertex: float('infinity') for vertex in self.graph}
+        distances[start] = 0
+        priority_queue = [(0, start)]  # (distance, vertex)
+
+        while priority_queue:
+            current_distance, current_vertex = heapq.heappop(priority_queue)
+
+            if current_distance > distances[current_vertex]:
+                continue
+
+            for neighbor, weight in self.graph[current_vertex]:
+                distance = current_distance + weight
+
+                if distance < distances[neighbor]:
+                    distances[neighbor] = distance
+                    heapq.heappush(priority_queue, (distance, neighbor))
+
+        return distances
+
+g = Graph()
+g.add_edge(0, 1, 1)
+g.add_edge(0, 2, 4)
+g.add_edge(1, 2, 2)
+g.add_edge(1, 3, 5)
+g.add_edge(2, 3, 1)
+g.print_graph()
+print("\nShortest path from 0 to 4:", g.bfs_shortest_path(0, 4))
+print("Graph has cycle:", g.has_cycle())
+
+#5 Check if the Graph is Bipartite
+
+class Graph:
+    
+    def __init__(self):
+        self.graph = defaultdict(list)  
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+    
+    def add_edge(self, vertex1, vertex2, weight=1):
+        self.add_vertex(vertex1)
+        self.add_vertex(vertex2)
+        self.graph[vertex1].append((vertex2, weight))
+        self.graph[vertex2].append((vertex1, weight)) 
+    
+    def print_graph(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {', '.join(f'({neighbor}, {weight})' for neighbor, weight in edges)}")
+
+    def bfs_shortest_path(self, start, goal):
+        visited = set()
+        queue = deque([(start, [start])]) 
+        while queue:
+            vertex, path = queue.popleft()
+            if vertex == goal:
+                return path
+            if vertex not in visited:
+                visited.add(vertex)
+                for neighbor, _ in self.graph[vertex]:  
+                    queue.append((neighbor, path + [neighbor]))
+        return None  
+    
+    def has_cycle(self):
+        visited = set()
+
+        def dfs(vertex, parent):
+            visited.add(vertex)
+            for neighbor, _ in self.graph[vertex]:
+                if neighbor not in visited:
+                    if dfs(neighbor, vertex):
+                        return True
+                elif parent != neighbor:  # Found a back edge
+                    return True
+            return False
+
+        for vertex in self.graph:
+            if vertex not in visited:
+                if dfs(vertex, None):
+                    return True
+        return False
+    
+    def dijkstra(self, start):
+        distances = {vertex: float('infinity') for vertex in self.graph}
+        distances[start] = 0
+        priority_queue = [(0, start)]  # (distance, vertex)
+
+        while priority_queue:
+            current_distance, current_vertex = heapq.heappop(priority_queue)
+
+            if current_distance > distances[current_vertex]:
+                continue
+
+            for neighbor, weight in self.graph[current_vertex]:
+                distance = current_distance + weight
+
+                if distance < distances[neighbor]:
+                    distances[neighbor] = distance
+                    heapq.heappush(priority_queue, (distance, neighbor))
+
+        return distances
+    
+    def is_bipartite(self):
+        color = {}
+
+        def bfs(vertex):
+            queue = deque([vertex])
+            color[vertex] = 0  # Start coloring with 0
+
+            while queue:
+                current = queue.popleft()
+                for neighbor in self.graph[current]:
+                    if neighbor[0] not in color:
+                        color[neighbor[0]] = 1 - color[current]
+                        queue.append(neighbor[0])
+                    elif color[neighbor[0]] == color[current]:  # Same color as current
+                        return False
+            return True
+
+        for vertex in self.graph:
+            if vertex not in color:
+                if not bfs(vertex):
+                    return False
+        return True
+
+g = Graph()
+g.add_edge(0, 1, 1)
+g.add_edge(0, 2, 4)
+g.add_edge(1, 2, 2)
+g.add_edge(1, 3, 5)
+g.add_edge(2, 3, 1)
+g.print_graph()
+print("\nShortest path from 0 to 4:", g.bfs_shortest_path(0, 4))
+print("Graph has cycle:", g.has_cycle())
+print("Is the graph bipartite?", g.is_bipartite())

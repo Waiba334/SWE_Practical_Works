@@ -1,90 +1,347 @@
-#Implement a method to find the middle element of the linked list
+#1  Method to Find the Maximum Value in the BST
 class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
 
-class LinkedList:
+class BST:
     def __init__(self):
-        self.head = None
+        self.root = None
 
-    def append(self, data):
-        new_node = Node(data)
-        if not self.head:
-            self.head = new_node
-            return
-        last = self.head
-        while last.next:
-            last = last.next
-        last.next = new_node
+    def insert(self, value):
+        if self.root is None:
+            self.root = Node(value)
+        else:
+            self._insert_recursive(self.root, value)
 
-    def find_middle(self):
-        slow = self.head
-        fast = self.head
-        while fast and fast.next:
-            slow = slow.next
-            fast = fast.next.next
-        return slow.data if slow else None
-
-#Create a method to detect if the linked list has a cycle
-    def has_cycle(self):
-        slow = self.head
-        fast = self.head
-        while fast and fast.next:
-            slow = slow.next
-            fast = fast.next.next
-            if slow == fast:
-                return True
-        return False
-
-#Implement a method to remove duplicates from an unsorted linked list
-    def remove_duplicates(self):
-        current = self.head
-        prev = None
-        seen = set()
-        while current:
-            if current.data in seen:
-                prev.next = current.next  # Remove the duplicate
+    def _insert_recursive(self, node, value):
+        if value < node.value:
+            if node.left is None:
+                node.left = Node(value)
             else:
-                seen.add(current.data)
-                prev = current
-            current = current.next
+                self._insert_recursive(node.left, value)
+        else:
+            if node.right is None:
+                node.right = Node(value)
+            else:
+                self._insert_recursive(node.right, value)
 
-#Add a method to merge two sorted linked lists into a single sorted linked list.
-    def merge_sorted(self, other_list):
-        dummy = Node(0)
-        tail = dummy
-        a = self.head
-        b = other_list.head
+    def find_max(self):
+        if self.root is None:
+            return None
+        current = self.root
+        while current.right:
+            current = current.right
+        return current.value
+    
+#2 Method to Count the Total Number of Nodes in the BST
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+class BST:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, value):
+        if self.root is None:
+            self.root = Node(value)
+        else:
+            self._insert_recursive(self.root, value)
+
+    def _insert_recursive(self, node, value):
+        if value < node.value:
+            if node.left is None:
+                node.left = Node(value)
+            else:
+                self._insert_recursive(node.left, value)
+        else:
+            if node.right is None:
+                node.right = Node(value)
+            else:
+                self._insert_recursive(node.right, value)
+
+    def find_max(self):
+        if self.root is None:
+            return None
+        current = self.root
+        while current.right:
+            current = current.right
+        return current.value
+    
+    #Method to Count the Total Number of Nodes in the BST
+
+    def count_nodes(self):
+        return self._count_nodes_recursive(self.root)
+
+    def _count_nodes_recursive(self, node):
+        if node is None:
+            return 0
+        return 1 + self._count_nodes_recursive(node.left) + self._count_nodes_recursive(node.right)
+
+
+bst = BST()
+values = [10, 5, 15, 3, 7, 13, 18]
+for v in values:
+    bst.insert(v)
+
+#3 Level-Order Traversal (Breadth-First Search) for the BST
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+class BST:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, value):
+        if self.root is None:
+            self.root = Node(value)
+        else:
+            self._insert_recursive(self.root, value)
+
+    def _insert_recursive(self, node, value):
+        if value < node.value:
+            if node.left is None:
+                node.left = Node(value)
+            else:
+                self._insert_recursive(node.left, value)
+        else:
+            if node.right is None:
+                node.right = Node(value)
+            else:
+                self._insert_recursive(node.right, value)
+
+    def find_max(self):
+        if self.root is None:
+            return None
+        current = self.root
+        while current.right:
+            current = current.right
+        return current.value
+    
+    #Method to Count the Total Number of Nodes in the BST
+
+    def count_nodes(self):
+        return self._count_nodes_recursive(self.root)
+
+    def _count_nodes_recursive(self, node):
+        if node is None:
+            return 0
+        return 1 + self._count_nodes_recursive(node.left) + self._count_nodes_recursive(node.right)
+    
+    #Level-Order Traversal (Breadth-First Search) for the BST
+
+    def level_order_traversal(self):
+        if self.root is None:
+            return []
         
-        while a and b:
-            if a.data <= b.data:
-                tail.next = a
-                a = a.next
+        result = []
+        queue = [self.root]
+        
+        while queue:
+            current = queue.pop(0)
+            result.append(current.value)
+            
+            if current.left:
+                queue.append(current.left)
+            if current.right:
+                queue.append(current.right)
+        
+        return result
+    
+bst = BST()
+values = [10, 5, 15, 3, 7, 13, 18]
+for v in values:
+    bst.insert(v)
+
+#4 Method to Find the Height of the BST
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+class BST:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, value):
+        if self.root is None:
+            self.root = Node(value)
+        else:
+            self._insert_recursive(self.root, value)
+
+    def _insert_recursive(self, node, value):
+        if value < node.value:
+            if node.left is None:
+                node.left = Node(value)
             else:
-                tail.next = b
-                b = b.next
-            tail = tail.next
+                self._insert_recursive(node.left, value)
+        else:
+            if node.right is None:
+                node.right = Node(value)
+            else:
+                self._insert_recursive(node.right, value)
 
-        tail.next = a if a else b
-        self.head = dummy.next
+    def find_max(self):
+        if self.root is None:
+            return None
+        current = self.root
+        while current.right:
+            current = current.right
+        return current.value
+    
+    #Method to Count the Total Number of Nodes in the BST
 
-ll1 = LinkedList()
-ll2 = LinkedList()
+    def count_nodes(self):
+        return self._count_nodes_recursive(self.root)
 
-for value in [1, 3, 5, 7]:
-    ll1.append(value)
+    def _count_nodes_recursive(self, node):
+        if node is None:
+            return 0
+        return 1 + self._count_nodes_recursive(node.left) + self._count_nodes_recursive(node.right)
+    
+    #Level-Order Traversal (Breadth-First Search) for the BST
 
-for value in [2, 4, 6, 8]:
-    ll2.append(value)
+    def level_order_traversal(self):
+        if self.root is None:
+            return []
+        
+        result = []
+        queue = [self.root]
+        
+        while queue:
+            current = queue.pop(0)
+            result.append(current.value)
+            
+            if current.left:
+                queue.append(current.left)
+            if current.right:
+                queue.append(current.right)
+        
+        return result
+    
+    #Method to Find the Height of the BST
 
-print("Middle of ll1:", ll1.find_middle())
-print("Does ll1 have a cycle?", ll1.has_cycle())
+    def find_height(self):
+        return self._find_height_recursive(self.root)
 
-ll1.remove_duplicates()
-ll1.merge_sorted(ll2)
+    def _find_height_recursive(self, node):
+        if node is None:
+            return -1
+        left_height = self._find_height_recursive(node.left)
+        right_height = self._find_height_recursive(node.right)
+        return 1 + max(left_height, right_height)
 
-current = ll1.head
-while current:
-    print(current.data, end=" -> ")
-    current = current.next
+bst = BST()
+values = [10, 5, 15, 3, 7, 13, 18]
+for v in values:
+    bst.insert(v)
+
+#5 Method to Check if the Tree is a Valid BST
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+class BST:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, value):
+        if self.root is None:
+            self.root = Node(value)
+        else:
+            self._insert_recursive(self.root, value)
+
+    def _insert_recursive(self, node, value):
+        if value < node.value:
+            if node.left is None:
+                node.left = Node(value)
+            else:
+                self._insert_recursive(node.left, value)
+        else:
+            if node.right is None:
+                node.right = Node(value)
+            else:
+                self._insert_recursive(node.right, value)
+
+    def find_max(self):
+        if self.root is None:
+            return None
+        current = self.root
+        while current.right:
+            current = current.right
+        return current.value
+    
+    #Method to Count the Total Number of Nodes in the BST
+
+    def count_nodes(self):
+        return self._count_nodes_recursive(self.root)
+
+    def _count_nodes_recursive(self, node):
+        if node is None:
+            return 0
+        return 1 + self._count_nodes_recursive(node.left) + self._count_nodes_recursive(node.right)
+    
+    #Level-Order Traversal (Breadth-First Search) for the BST
+
+    def level_order_traversal(self):
+        if self.root is None:
+            return []
+        
+        result = []
+        queue = [self.root]
+        
+        while queue:
+            current = queue.pop(0)
+            result.append(current.value)
+            
+            if current.left:
+                queue.append(current.left)
+            if current.right:
+                queue.append(current.right)
+        
+        return result
+    
+    #Method to Find the Height of the BST
+
+    def find_height(self):
+        return self._find_height_recursive(self.root)
+
+    def _find_height_recursive(self, node):
+        if node is None:
+            return -1
+        left_height = self._find_height_recursive(node.left)
+        right_height = self._find_height_recursive(node.right)
+        return 1 + max(left_height, right_height)
+
+    #Method to Check if the Tree is a Valid BST
+    def is_valid_bst(self):
+        return self._is_valid_bst_recursive(self.root, float('-inf'), float('inf'))
+
+    def _is_valid_bst_recursive(self, node, min_val, max_val):
+        if node is None:
+            return True
+        if not (min_val < node.value < max_val):
+            return False
+        return (self._is_valid_bst_recursive(node.left, min_val, node.value) and
+                self._is_valid_bst_recursive(node.right, node.value, max_val))
+
+bst = BST()
+values = [10, 5, 15, 3, 7, 13, 18]
+for v in values:
+    bst.insert(v)
+
+print("Max Value:", bst.find_max())
+print("Total Nodes:", bst.count_nodes())
+print("Level Order Traversal:", bst.level_order_traversal())
+print("Height of BST:", bst.find_height())
+print("Is Valid BST:", bst.is_valid_bst())
