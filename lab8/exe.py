@@ -78,7 +78,7 @@ def visualize_bubble_sort(arr):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
             ax.clear()
-            ax.bar(range(len(arr)), arr, color='blue')
+            ax.bar(range(len(arr)), arr, color='grey')
             plt.pause(0.05)
     plt.ioff()
     plt.show()
